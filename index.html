@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Teachers' Day!</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:wght@600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#3a2f4a; --rose:#c4556b; --paper:#fffaf1; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; }
+  body {
+    min-height:100vh; padding:24px 16px 48px; overflow-x:hidden;
+    background:linear-gradient(180deg,#2b1b4a 0%,#6b3a73 55%,#e79a8a 100%) fixed;
+    font-family:"Nunito",system-ui,sans-serif; color:#fff;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .petal {
+    position:fixed; top:-30px; pointer-events:none; z-index:0;
+    background:rgba(255,190,205,.75); border-radius:150% 0 150% 0;
+    animation:fall linear infinite;
+  }
+  @keyframes fall {
+    from { transform:translateY(-5vh) rotate(0deg); }
+    to   { transform:translateY(110vh) rotate(420deg) translateX(40px); }
+  }
+  main { width:100%; max-width:420px; position:relative; z-index:1; text-align:center; }
+  .music {
+    margin:0 auto 26px; display:inline-flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+    color:#fff; border-radius:999px; padding:.55em 1.2em; font:700 .9rem Nunito,sans-serif; cursor:pointer;
+  }
+  h1 { font:600 clamp(1.9rem,8.5vw,2.5rem)/1.2 "Playfair Display",serif; margin:0 0 8px; text-shadow:0 2px 14px rgba(0,0,0,.3); }
+
+  .env-wrap { max-height:600px; transition:opacity .6s ease, max-height .8s ease; }
+  .env-wrap.gone { opacity:0; max-height:0; overflow:hidden; pointer-events:none; }
+  .env {
+    position:relative; width:100%; max-width:320px; height:210px;
+    margin:110px auto 18px; background:#d98ba0; border-radius:8px; cursor:pointer;
+    perspective:900px; box-shadow:0 18px 40px rgba(0,0,0,.35);
+  }
+  .env:focus-visible { outline:3px solid #fff; outline-offset:6px; }
+  .sheet {
+    position:absolute; left:7%; right:7%; top:8%; height:80%; z-index:2;
+    background:var(--paper); border-radius:4px; transition:transform .9s ease .45s;
+  }
+  .pocket {
+    position:absolute; inset:0; z-index:3; background:#f3c1cd; border-radius:8px;
+    clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);
+  }
+  .flap {
+    position:absolute; top:0; left:0; width:100%; height:56%; z-index:4;
+    background:#e9a3b5; clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top; transition:transform .7s ease, z-index 0s .35s;
+  }
+  .seal {
+    position:absolute; left:50%; top:46%; z-index:5; width:46px; height:46px; margin-left:-23px;
+    border-radius:50%; background:radial-gradient(circle at 35% 30%,#e0536b,#a3243d);
+    display:grid; place-items:center; font-size:1.3rem; color:#ffe3e8;
+    box-shadow:0 4px 10px rgba(0,0,0,.35); transition:opacity .3s ease;
+  }
+  .env.open .flap { transform:rotateX(180deg); z-index:1; }
+  .env.open .seal { opacity:0; }
+  .env.open .sheet { transform:translateY(-52%); }
+  .hint { font:700 1.5rem Caveat,cursive; animation:pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform:scale(1.06); opacity:.8; } }
+
+  .paper {
+    background-color:var(--paper); color:var(--ink); text-align:left; border-radius:6px;
+    max-height:0; opacity:0; overflow:hidden; padding:0 22px 0 56px; margin-top:0;
+    background-image:
+      linear-gradient(90deg,transparent 42px,rgba(200,80,95,.4) 42px,rgba(200,80,95,.4) 44px,transparent 44px),
+      repeating-linear-gradient(transparent,transparent 31px,rgba(80,110,160,.2) 32px);
+    box-shadow:0 18px 44px rgba(0,0,0,.4);
+    transition:max-height 1.2s ease, opacity .7s ease, padding .6s ease;
+  }
+  .paper.show { max-height:2600px; opacity:1; padding:30px 22px 30px 56px; }
+  .paper .title { font:600 1.35rem/1.3 "Playfair Display",serif; color:var(--rose); margin:0 0 14px; }
+  .paper .to, .paper p { font:500 1.5rem/32px Caveat,cursive; margin:0 0 32px; }
+  .paper .to { font-weight:700; }
+  .paper #body p:last-child { margin-bottom:0; }
+  .close {
+    display:block; margin:30px 0 0; background:var(--rose); color:#fff; border:0;
+    border-radius:999px; padding:.7em 1.5em; font:700 .95rem Nunito,sans-serif; cursor:pointer;
+  }
+  .close:focus-visible { outline:3px solid var(--ink); outline-offset:3px; }
+  @media (prefers-reduced-motion:reduce) {
+    .petal,.hint { animation:none; }
+    .sheet,.flap,.paper,.env-wrap { transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <button class="music" id="musicBtn" type="button">🎵 <span id="musicLabel">Play music</span></button>
+
+  <h1 id="title"></h1>
+
+  <div class="env-wrap" id="envWrap">
+    <div class="env" id="env" role="button" tabindex="0" aria-label="Open the envelope">
+      <div class="sheet"></div>
+      <div class="pocket"></div>
+      <div class="flap"></div>
+      <div class="seal">♥</div>
+    </div>
+    <p class="hint" id="hint">Click to open your letter 💌</p>
+  </div>
+
+  <article class="paper" id="paper" aria-live="polite">
+    <h2 class="title" id="paperTitle"></h2>
+    <p class="to" id="to"></p>
+    <div id="body"></div>
+    <button class="close" id="closeBtn" type="button">Close letter ✉️</button>
+  </article>
+</main>
+
+<audio id="audio" src="music.mp3" loop preload="auto"></audio>
+
+<script>
+  // ✏️ BAGUHIN DITO ───────────────────────────────
+  const TITLE   = "Happy Teachers' Day!";
+  const TO      = "Dear Ma'am Mari,";
+  const MESSAGE = [
+    "Thank you so much for your never-ending care for us.",
+    "We feel that you're not just doing it because it's your job, but because you want us to learn, grow, and master your subject.",
+    "We value every effort and lesson you have given us, and we will never forget them. Thank you for guiding us toward a brighter future."
+  ];
+  // ────────────────────────────────────────────────
+
+  const $ = id => document.getElementById(id);
+  $("title").textContent = TITLE;
+  $("paperTitle").textContent = TITLE;
+  $("to").textContent = TO;
+  MESSAGE.forEach(t => { const p = document.createElement("p"); p.textContent = t; $("body").appendChild(p); });
+
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!reduced) {
+    for (let i = 0; i < 16; i++) {
+      const s = document.createElement("span");
+      const size = 8 + Math.random() * 10;
+      s.className = "petal";
+      s.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size}px;` +
+        `animation-duration:${9 + Math.random()*9}s;animation-delay:${-Math.random()*14}s`;
+      document.body.appendChild(s);
+    }
+  }
+
+  /* music */
+  const audio = $("audio"), musicBtn = $("musicBtn"), label = $("musicLabel");
+  const notFound = () => { label.textContent = "Music file not found"; };
+  const setLabel = () => { label.textContent = audio.paused ? "Play music" : "Pause music"; };
+
+  musicBtn.addEventListener("click", () => {
+    if (audio.paused) { audio.play().catch(notFound); } else { audio.pause(); }
+  });
+  audio.addEventListener("play", setLabel);
+  audio.addEventListener("pause", setLabel);
+  audio.addEventListener("error", notFound);
+
+  /* envelope <-> letter */
+  const env = $("env"), envWrap = $("envWrap"), paper = $("paper"), hint = $("hint");
+  let opened = false, timer = null;
+
+  function openEnvelope() {
+    if (opened) return;
+    opened = true;
+    if (audio.paused) audio.play().catch(() => {});
+    hint.style.display = "none";
+    env.classList.add("open");
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      envWrap.classList.add("gone");
+      paper.classList.add("show");
+      paper.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, reduced ? 0 : 1500);
+  }
+
+  function closeLetter() {
+    if (!opened) return;
+    opened = false;
+    clearTimeout(timer);
+    paper.classList.remove("show");
+    envWrap.classList.remove("gone");
+    env.classList.remove("open");
+    hint.style.display = "";
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    env.focus({ preventScroll: true });
+  }
+
+  env.addEventListener("click", openEnvelope);
+  env.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openEnvelope(); } });
+  $("closeBtn").addEventListener("click", closeLetter);
+</script>
+</body>
+  </html>
